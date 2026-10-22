@@ -31,20 +31,24 @@ Addressing, VLANs and DHCP are unchanged from Lab 06. PC0 connects to R1 at 192.
 ip domain-name lab.local
 crypto key generate rsa          ! modulus 2048
 username admin secret <REDACTED>
+ip ssh version 2
 !
 line vty 0 4
  login local
  transport input ssh
 ```
-A domain name is required to generate the RSA key pair; without the key SSH cannot start. `login local` checks the local user database, and `transport input ssh` allows SSH only.
+A domain name is required to generate the RSA key pair; without the key SSH cannot start. `ip ssh version 2` disables the older, weaker SSHv1. `login local` checks the local user database, and `transport input ssh` allows SSH only.
 
-**2. Privileged access and idle sessions**
+**2. Privileged access, idle sessions and console login**
 ```
 enable secret <REDACTED>
 line vty 0 4
  exec-timeout 5 0
+!
+line console 0
+ login local
 ```
-Logging in gives only user mode (`R1>`); a second password is needed for `R1#`. Idle sessions close after 5 minutes.
+Logging in gives only user mode (`R1>`); a second password is needed for `R1#`. Idle sessions close after 5 minutes. The console port now asks for the same local user as SSH, so both access lines – physical (console) and remote (VTY) – are protected.
 
 **3. Password-guessing protection and warning banner**
 ```
@@ -65,6 +69,7 @@ Full configs (passwords redacted): [configs/](configs/)
 | `telnet 192.168.1.1` | Connection refused – Telnet blocked | ✅ |
 | 3 wrong passwords in a row | Next login refused, even with the correct password | ✅ |
 | Wait 60 s, correct password | Login works again | ✅ |
+| Console (on R1): `exit`, then Enter | Username / Password prompt | ✅ |
 
 On R1: `show login` shows the quiet-mode state and remaining block time; `show ssh` lists active sessions.
 
@@ -76,6 +81,7 @@ On R1: `show login` shows the quiet-mode state and remaining block time; `show s
 ## Key takeaways
 
 - Telnet sends credentials in clear text; SSH encrypts the whole session – production devices allow SSH only.
+- Every access line (console, VTY) is secured separately – the user must exist before `login local` is enabled, or you lock yourself out.
 - Separate the login (`username ... secret`) from privileged access (`enable secret`).
 - `secret` stores a hash; `password` + `service password-encryption` is only weak type-7 obfuscation.
 - `login block-for` slows down brute-force attempts without any extra infrastructure.
