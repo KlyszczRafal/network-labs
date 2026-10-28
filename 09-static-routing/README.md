@@ -66,8 +66,6 @@ Full configs (passwords redacted): [configs/](configs/)
 
 **A route on one side only is not enough.** With a route to Kraków on R1 but none back on R2, PC0 → PC1 fails: the request arrives, but R2 drops the reply because it has no route to 192.168.1.0. The reverse ping PC1 → PC0 fails too – this time already on the way *out*, at R2. Yet PC1 → 10.0.0.1 works, because every router on that particular path knows its part. Troubleshooting method: walk the packet hop by hop, both directions, and ask at each router *"do you know where to send this next?"*
 
-**The mask must match the destination network.** `ip route 10.0.0.0 255.255.255.0 ...` (a /24) instead of /30 happened to work – the router picks the most specific match, so the directly connected 10.0.0.4/30 still won – but it would misroute any future 10.0.0.x link. Corrected to 255.255.255.252.
-
 **A middle router cannot rely on a default route alone.** R2 has neighbours on both sides; a single default would send everything one way. It could combine a default route with one specific route (longest match wins) – the usual design where the default points to the internet and specific routes point to internal networks.
 
 **Scaling limits.** Three routers and five networks already need several static routes on every router, and none of them adapt if a link fails. This is the problem dynamic routing (OSPF) solves.
