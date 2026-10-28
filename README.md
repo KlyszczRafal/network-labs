@@ -13,6 +13,7 @@ Hands-on networking labs built in Cisco Packet Tracer 9.0 – topologies, addres
 | 07 | [SSH and router hardening](07-ssh/) | SSH, local users, enable secret, login block-for, banner |
 | 08 | [SSH management of a switch](08-ssh-switch/) | SVI, default gateway, VTY 0–15, requirements-based task |
 | 09 | [Static routing between three branches](09-static-routing/) | `ip route`, /30 links, default route, longest match |
+| 10 | [OSPF and automatic failover](10-ospf/) | Single-area OSPF, router ID, passive interface, link-failure test |
 
 Each lab folder contains:
 - `README.md` – goal, topology, addressing, key config, verification
