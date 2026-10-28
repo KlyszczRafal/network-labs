@@ -95,5 +95,5 @@ Cost: each GigabitEthernet link has OSPF cost 1 (default reference bandwidth), s
 
 - OSPF neighbours must agree on the link network and area; `show ip ospf neighbor` (state FULL) is the first thing to check.
 - Routes learned via OSPF show as `O` with `[110/cost]`; the lowest total cost wins.
-- Redundancy only helps if there is a second path – OSPF reroutes, it cannot create a link that does not exist.
+- Redundancy only helps if there is a second path – OSPF reroutes.
 - `passive-interface` on user-facing ports is standard practice.
